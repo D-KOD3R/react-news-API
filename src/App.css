@@ -1,5 +1,9 @@
 @import '~antd/dist/antd.css';
 
+.ant-layout-sider-children {
+	height: 100%;
+	overflow: auto;
+}
 .App {
 	text-align: center;
 }

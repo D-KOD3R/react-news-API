@@ -7,8 +7,12 @@ import { Provider } from 'react-redux';
 import { createStore, applyMiddleware } from 'redux';
 import newsReducer from './store/reducers/newsReducer';
 import thunk from 'redux-thunk';
+import { composeWithDevTools } from 'redux-devtools-extension';
 
-const globalStore = createStore(newsReducer, applyMiddleware(thunk));
+const globalStore = createStore(
+	newsReducer,
+	composeWithDevTools(applyMiddleware(thunk))
+);
 ReactDOM.render(
 	<React.StrictMode>
 		<Provider store={globalStore}>
