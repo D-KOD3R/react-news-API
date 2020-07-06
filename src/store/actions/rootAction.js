@@ -27,7 +27,9 @@ export const fetchSources = () => {
 			.get('/sources?apiKey=6f1b98b92f7243a9a2f83cc89503b28a')
 			.then((response) => {
 				if (response.status === 200) {
-					dispatch(populateCurrentFeeds(response.data.sources[0]));
+					dispatch(
+						populateCurrentFeeds(response.data.sources[0], 'everything', true)
+					);
 					dispatch({ type: 'SET_SOURCES', result: response.data.sources });
 				}
 			})
@@ -37,19 +39,25 @@ export const fetchSources = () => {
 	};
 };
 
-export const populateCurrentFeeds = (channel, section = 'everything') => {
-	console.log('CLICKED CHANNEL', channel);
-
-	const basicPath = {
-		everything: `/everything?sources=${channel.id}&apiKey=6f1b98b92f7243a9a2f83cc89503b28a`,
-		topHeadlines: `/top-headlines?sources=${channel.id}&apiKey=6f1b98b92f7243a9a2f83cc89503b28a`,
-	};
-	return async (dispatch) => {
+export const populateCurrentFeeds = (
+	channel,
+	section = 'everything',
+	resetCounter = false
+) => {
+	console.log('CHANNEL', channel);
+	return async (dispatch, getState) => {
+		const nextPage = resetCounter ? 1 : getState().currentPage + 1;
+		const basicPath = {
+			everything: `/everything?sources=${channel.id}&page=${nextPage}&apiKey=6f1b98b92f7243a9a2f83cc89503b28a`,
+			topHeadlines: `/top-headlines?sources=${channel.id}&page=${nextPage}&apiKey=6f1b98b92f7243a9a2f83cc89503b28a`,
+		};
 		const url = basicPath[section];
 		await instance.get(url).then((response) => {
 			if (response.status === 200) {
 				dispatch({
 					type: 'POPULATE_ARTICLES',
+					resetCounter: resetCounter,
+					currentPage: nextPage,
 					channelId: channel.id,
 					channelName: channel.name,
 					newsArticles: response.data.articles,

@@ -1,6 +1,7 @@
 const initialState = {
 	currentChannelID: null,
 	currentChannelName: null,
+	currentPage: 1,
 	newsSources: [],
 	currentFeeds: [],
 };
@@ -15,7 +16,16 @@ const newsReducer = (state = initialState, action) => {
 		case 'POPULATE_ARTICLES': {
 			newState.currentChannelID = action.channelId;
 			newState.currentChannelName = action.channelName;
-			newState.currentFeeds = action.newsArticles;
+			if (action.resetCounter) {
+				newState.currentFeeds = [...action.newsArticles];
+			} else {
+				newState.currentFeeds = [
+					...newState.currentFeeds,
+					...action.newsArticles,
+				];
+			}
+
+			newState.currentPage = action.currentPage;
 			return newState;
 		}
 		default: {

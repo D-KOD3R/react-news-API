@@ -1,5 +1,13 @@
 @import '~antd/dist/antd.css';
 
+.news-detail {
+	display: flex;
+	justify-content: center; /* horizontal */
+	align-items: center; /* vertical */
+	position: relative;
+	margin-top: 100px;
+}
+
 .ant-layout-sider-children {
 	height: 100%;
 	overflow: auto;
